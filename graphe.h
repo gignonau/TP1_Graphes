@@ -11,10 +11,19 @@ public :
         vector<vector<int>> matrix1(length, vector<int>(length));
         matrix = matrix1;
     }
-    void ajouterArc();
+    GRAPHE(){lenght = 0;}
+    void ajouterArc(int s1, int s2, int weight){matrix[s1][s2]=weight;}
+    int getLenght() const;
+    void setLenght(int value);
+    void addReloadPoint(int a){reloadPoints.push_back(a);}
+    int getWeightAt(int s1, int s2){
+        return matrix[s1][s2];
+    }
+
 private :
     vector<int> reloadPoints;
     vector<vector<int>> matrix;
+    int lenght;
 
 };
 
