@@ -12,6 +12,7 @@ public :
         matrix = matrix1;
     }
     GRAPHE(){lenght = 0;}
+
     void ajouterArc(int s1, int s2, int weight){matrix[s1][s2]=weight;}
     int getLenght() const;
     void setLenght(int value);
@@ -20,50 +21,21 @@ public :
         return matrix[s1][s2];
     }
 
+    vector<string> getNamesSommets() const;
+    void setNamesSommets(const vector<string> &value);
+
+    void setNameAt(int a, string b);
+    string getNameAt(int a);
+
+    vector<vector<int> > getMatrix() const;
+    void setMatrix(const vector<vector<int> > &value);
+
 private :
     vector<int> reloadPoints;
     vector<vector<int>> matrix;
     int lenght;
+    vector<string> namesSommets;
 
 };
 
-/*
-class Sommet{
-public :
-    Sommet(int i, string n, bool r):id(i),name(n),reload(r){}
-
-    int getId() const{return id;}
-    void setId(int value){id = value;}
-
-    string getName() const{return name;}
-    void setName(const string &value){name = value;}
-
-    bool getReload() const{return reload;}
-    void setReload(bool value){reload = value;}
-
-private :
-    int id;
-    string name;
-    bool reload;
-
-};
-
-class Arc{
-public :
-    Arc(int d, int s1, int s2):distance(d),sommet1(s1),sommet2(s2){}
-    int getDistance() const{return distance;}
-    void setDistance(int value){distance = value;}
-
-    int getSommet1() const{return sommet1;}
-    void setSommet1(const int &value){}
-
-    int getSommet2() const{return sommet2;}
-    void setSommet2(const int &value);
-
-private :
-    int distance;
-    int sommet1;
-    int sommet2;
-
-};*/
 #endif // GRAPHE_H
