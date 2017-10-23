@@ -185,8 +185,125 @@ GRAPHE creerGrapheOriente(string path){
     return graphe;
 }
 
-void genererHasse(GRAPHE graphe){
+
+void afficheTousLesFils(int vieux, GRAPHE graphe,int cpt){
+    vector<vector<int>> matrix = graphe.getMatrix() ;
+
+    cout<<endl;
+
+    for(int i = 0; i<graphe.getLenght();i++){
+        if(matrix[i][vieux]!=INT_MAX){
+            for(int j = 0 ; j<cpt;j++)
+                cout<<"\t";
+            cout<<"\\__ "<<graphe.getNameAt(i);
+            afficheTousLesFils(i,graphe,cpt+1);
+//            cout<<endl;
+        }
+    }
+}
+void theBestDisplayEver(GRAPHE graphe){
+    vector<int> listJeune ;
+    vector<vector<int>> matrix = graphe.getMatrix() ;
+    bool haveFather;
+
+    for(int i = 0; i<graphe.getLenght();i++){
+        haveFather = false;
+        for(int j = 0 ;j<graphe.getLenght();j++){
+            if(matrix[i][j] == 1){
+                haveFather = true;
+            }
+        }
+        if(haveFather == false){
+            listJeune.push_back(i);
+        }
+    }
+
+    //afficher linéaire les suites de recette en partant des ingrédients de base -> rangé dans list
+    for(int i = 0 ; i<listJeune.size();i++){
+        cout<<graphe.getNameAt(listJeune[i])<<endl<<"\t";
+        afficheTousLesFils(listJeune[i],graphe,1);
+        cout<<endl;
+    }
+}
+
+vector<int> giveMeChild(int node, GRAPHE graphe){
+    vector<int> result;
+    vector<vector<int>> matrix = graphe.getMatrix() ;
+    for(int i = 0;i<graphe.getLenght();i++){
+        if(matrix[node][i] == 1 ){
+            result.push_back(i);
+        }
+    }
+    return result;
+}
+
+void displayListHasse(int node,string a, GRAPHE graphe){
+    vector<int> children = giveMeChild(node, graphe);
+    if(children.size() == 0 ){
+        cout<<a<<endl;
+    }
+    else{
+        for(int i = 0 ; i<children.size();i++){
+            string oss ;
+            oss = a+ " -> "+ graphe.getNameAt(children[i]);
+            displayListHasse(children[i],oss,graphe);
+        }
+    }
+}
+void lireHasse(GRAPHE graphe){
+
+    vector<int> listVieux ;
+    vector<vector<int>> matrix = graphe.getMatrix() ;
+    bool haveSon;
+
+    for(int i = 0; i<graphe.getLenght();i++){
+        haveSon = false;
+        for(int j = 0 ;j<graphe.getLenght();j++){
+            if(matrix[j][i] == 1){
+                haveSon = true;
+            }
+        }
+        if(haveSon == false){
+            listVieux.push_back(i);
+        }
+    }
+    for(int i = 0 ; i<listVieux.size();i++){
+        string oss  ;
+        oss = graphe.getNameAt(listVieux[i]);
+        displayListHasse(listVieux[i],oss,graphe);
+    }
+
+    theBestDisplayEver(graphe);
+
 
 }
+/************** FUNCTION D3 ************************/
+void genererHasse(GRAPHE graphe){
+
+    vector<vector<int>> matrix = graphe.getMatrix();
+    for(int i = 0; i<graphe.getLenght();i++){
+        //Eliminer reflexivité
+        matrix[i][i] = INT_MAX;
+    }
+    for(int i = 0; i<graphe.getLenght();i++){
+        //Eliminer les arêtes de transitivités
+        for(int j = 0;j<graphe.getLenght();j++){
+            if(matrix[i][j] != INT_MAX){
+                for(int z = 0 ; z<graphe.getLenght() ; z++){
+                    if(matrix[i][z]!=INT_MAX && matrix[j][z]!=INT_MAX){
+                        matrix[i][z] = INT_MAX;
+                    }
+                }
+            }
+        }
+     }
+
+    graphe.setMatrix(matrix);
+
+    //afficher le diagramme
+
+    lireHasse(graphe);
+}
+
 
 
